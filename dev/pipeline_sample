@@ -1,0 +1,24 @@
+pipeline {
+   agent any
+   environment{
+       USER_ID="MT25005"
+   }
+   stages {
+       stage('1st stage') {
+           steps {
+               sh '''
+               echo "this build is run by ${USER_ID}"
+               echo "Secret key contents" > secret-content.log
+               '''
+           }
+       }
+   }
+   post{
+       always{
+           archiveArtifacts artifacts: "*.log"
+           sh'''
+           rm -rf secret-content.log
+           '''
+       }
+   }
+}
